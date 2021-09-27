@@ -15,8 +15,7 @@ const { Routes } = require('discord-api-types/v9');
 const { clientId, guildId, token } = require('../botconfig.json');
 const commands = [
     new SlashCommandBuilder().setName('play').setDescription('Start playing music!'),
-    new SlashCommandBuilder().setName('stop').setDescription('Stop playing music!'),
-    new SlashCommandBuilder().setName('user').setDescription('Replies with user info!'),
+    new SlashCommandBuilder().setName('stop').setDescription('Stop playing music!')
 ]
     .map(command => command.toJSON());
 const rest = new REST({ version: '9' }).setToken(token);
