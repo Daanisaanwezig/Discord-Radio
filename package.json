@@ -1,0 +1,37 @@
+{
+  "name": "discord-radio",
+  "version": "0.0.1",
+  "description": "Bring back the music to Discord!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Daanisaanwezig/Discord-Radio.git"
+  },
+  "keywords": [
+    "Discord.js"
+  ],
+  "author": "Daanisaanwezig",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/Daanisaanwezig/Discord-Radio/issues"
+  },
+  "homepage": "https://github.com/Daanisaanwezig/Discord-Radio#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/opus": "^0.5.3",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "@discordjs/voice": "^0.6.0",
+    "date-and-time": "^2.0.0",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0",
+    "ffmpeg-static": "^4.4.0",
+    "libsodium-wrappers": "^0.7.9",
+    "node": "16.9.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.3"
+  }
+}
