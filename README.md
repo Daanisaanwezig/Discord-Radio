@@ -8,3 +8,8 @@ Discord-Radio allows you to upload a list of songs to a folder which can be play
 
 ## How can I use it?
 Not yet, but the bot is getting the needed love and attention to become a reality in the near future!
+
+## I want to help!
+Thanks for showing interest in this project! If you want to out the creation of this Discord bot please check out the [CONTRIBUTING.md](https://github.com/Daanisaanwezig/Discord-Radio/blob/main/CONTRIBUTING.md), everything you need to know can be found in there.
+
+Please keep in mind that issues for this project are mainly intended for participating in Hacktoberfest, if you don't know what Hacktoberfest is you can check it out [here](https://hacktoberfest.digitalocean.com/)
