@@ -1,28 +1,61 @@
 export {}
 
-const { SlashCommandBuilder } = require( '@discordjs/builders' );
-const { REST } = require( '@discordjs/rest' );
-const { Routes } = require( 'discord-api-types/v9' );
+const fs = require( 'fs' )
+const { SlashCommandBuilder } = require( '@discordjs/builders' )
+const { REST } = require( '@discordjs/rest' )
+const { Routes } = require( 'discord-api-types/v9' )
 
-const { clientId, guildId, token } = require( '../botconfig.json' );
+const { clientId, guildId, token } = require( '../botconfig.json' )
 
-const commands = [
-	new SlashCommandBuilder().setName( 'play' ).setDescription( 'Start playing music!' ),
-	new SlashCommandBuilder().setName( 'stop' ).setDescription( 'Stop playing music!' )
-]
-	.map( command => command.toJSON() );
 
-const rest = new REST({ version: '9' }).setToken( token );
+let commands = []
+const modules = [ 'music' ]
 
-(async () => {
+const rest = new REST({ version: '9' }).setToken(token);
+
+
+
+getCommands().then( async () => {
 	try {
+		console.log('Started refreshing application (/) commands.');
+
 		await rest.put(
 			Routes.applicationGuildCommands( clientId, guildId ),
 			{ body: commands },
 		);
 
-		console.log( 'Successfully registered application commands.' );
+		console.log('Successfully reloaded application (/) commands.');
 	} catch ( error ) {
 		console.error( error );
 	}
-})();
+})
+
+
+
+function getCommands() {
+	let promise = new Promise( ( resolve, reject ) => {
+
+		modules.forEach( (c, commandsIndex ) => {
+			fs.readdir( `./commands/${c}`, ( err, files ) => {
+		
+				if ( err ) console.log( err )
+		
+				let jsfile = files.filter( f => f.split( '.' ).pop() === 'js' )
+				if( jsfile.length <= 0 ) {
+					return console.log( '[LOG] Couldn\'t find commands!' )
+				}
+		
+				jsfile.forEach((f, fileIndex) => {
+					const command = require( `./commands/${c}/${f}` )
+					commands.push( command.data.toJSON() )
+
+
+					if ( jsfile.length - 1 == fileIndex && modules.length -1 == commandsIndex ) {
+						resolve( commands )
+					}					
+				})
+			})
+		})
+	})
+	return promise
+}
