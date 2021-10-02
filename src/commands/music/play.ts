@@ -9,8 +9,24 @@ const { SlashCommandBuilder } = require( '@discordjs/builders' )
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('play')
-		.setDescription('Start playing music!'),
+		.setDescription('Start playing music!')
+        .addStringOption( option => option
+            .setName( 'station' )
+            .setDescription( 'Choose the radio station' )
+            .setRequired( true )),
 	async execute( client, interaction ) {
+
+        const station = interaction.options.getString( 'station' ).toLowerCase()
+
+        if (! fs.existsSync( `../music/${station}`) ) {
+            return await interaction.reply( 'I could not find that radio station, are you sure it exists?' )
+        }
+        fs.readdirSync( `../music/${station}`, async ( err, files ) => {
+            if (! files ) {
+                return await interaction.reply( 'I could not find that radio station, are you sure it exists?' )
+            }
+        })
+
 
         const voiceChannel = interaction.member.voice
 
@@ -50,8 +66,9 @@ module.exports = {
         await interaction.reply( `Started playing music in <#${voiceChannel.channelId}>` )
 
         initPlayer()
+
         function initPlayer() {
-            getTracks().then( async tracklist => {
+            getTracks( station ).then( async tracklist => {
 
                 // If the music folder is empty return and notify the user
                 if ( tracklist.length == 0 ) {
@@ -59,7 +76,7 @@ module.exports = {
                 }
                 let trackPath = tracklist.shift()
 
-                playTrack( client, player, trackPath )
+                playTrack( client, player, station, trackPath )
     
                 // Idle event that fires when the bot is no longer playing a track
                 player.on( AudioPlayerStatus.Idle, async () => {
@@ -68,7 +85,7 @@ module.exports = {
                     }
     
                     trackPath = tracklist.shift()
-                    playTrack( client, player, trackPath )
+                    playTrack( client, player, station, trackPath )
                 })
 
                 // If there is any error whilst playing a track, log it
@@ -80,12 +97,12 @@ module.exports = {
 	}
 }
 
-function getTracks() {
+function getTracks( station ) {
 
     // Create a promise that returns a list of all tracks in the music folder
     const promise = new Promise<String[]>((resolve, reject) => {
         let tracklist = []
-        fs.readdir( `../music`, ( err, files ) => {
+        fs.readdir( `../music/${station}`, ( err, files ) => {
             if ( err ) console.log( err )
 
             let tracks = files.filter( f => f.split( '.' ).pop() === 'mp3' )
@@ -102,7 +119,7 @@ function getTracks() {
     return promise
 }
 
-function playTrack( client, player, trackPath ) {
+function playTrack( client, player, trackStation, trackPath ) {
 
     // Set the status of the bot to the track currently playing
     client.user.setActivity( trackPath.split( '.' )[0], {
@@ -110,6 +127,6 @@ function playTrack( client, player, trackPath ) {
     })
 
     // Create a new audio stream and play the track
-    const audio = createAudioResource( join( __dirname, `../../../music/${trackPath}` ) )
+    const audio = createAudioResource( join( __dirname, `../../../music/${trackStation}/${trackPath}` ) )
     player.play( audio )
 }
