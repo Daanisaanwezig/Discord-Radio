@@ -1,5 +1,7 @@
 // Node package imports //
+
 const fs = require( 'fs' )
+const path = require( 'path' )
 const { Client, Intents, Collection } = require( 'discord.js' )
 const DateTime = require( 'date-and-time' )
 
@@ -30,7 +32,7 @@ client.commands = new Collection()
 const modules = [ 'music' ]
 
 modules.forEach( c => {
-    fs.readdir( `./commands/${c}`, ( err, files ) => {
+    fs.readdir(path.join(__dirname, "commands", c), ( err, files ) => {
 
         if ( err ) console.log( err )
 
@@ -40,7 +42,7 @@ modules.forEach( c => {
         }
 
         jsfile.forEach((f, i) => {
-            const command = require( `./commands/${c}/${f}` )
+            const command = require(path.join(__dirname, "commands", c, f))
             client.commands.set( command.data.name, command )
         })
     })
