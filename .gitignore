@@ -1,3 +1,4 @@
 /node_modules
 /music
 .botconfig
+/dist
