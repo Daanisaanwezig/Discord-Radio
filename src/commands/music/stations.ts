@@ -1,4 +1,5 @@
 import {CommandInteraction, MessageEmbed} from "discord.js";
+import { folderExists } from "../../util";
 
 export{}
 
@@ -13,11 +14,15 @@ module.exports = {
     .setName('stations')
     .setDescription('Lists available stations to play!'),
   async execute( client, interaction: CommandInteraction) {
-    if (!fs.existsSync(this.musicFolder)) {
+    if (! folderExists(this.musicFolder)) {
       return await interaction.reply( "I couldn't find the music folder, are you sure it exists?" )
     }
     fs.readdir(this.musicFolder, ( err, stations ) => {
         if ( err ) console.log( err );
+
+        // filter out all files from the music folder
+        stations = stations.filter(station => folderExists(`../music/${station}`));
+
         if (!stations.length) {
           return interaction.reply("No stations found... Did you create any?")
         }
