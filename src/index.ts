@@ -1,5 +1,7 @@
 // Node package imports //
+
 const fs = require( 'fs' )
+const path = require( 'path' )
 const { Client, Intents, Collection } = require( 'discord.js' )
 const DateTime = require( 'date-and-time' )
 
@@ -30,7 +32,7 @@ client.commands = new Collection()
 const modules = [ 'music' ]
 
 modules.forEach( c => {
-    fs.readdir( `./commands/${c}`, ( err, files ) => {
+    fs.readdir(path.join(__dirname, "commands", c), ( err, files ) => {
 
         if ( err ) console.log( err )
 
@@ -40,7 +42,7 @@ modules.forEach( c => {
         }
 
         jsfile.forEach((f, i) => {
-            const command = require( `./commands/${c}/${f}` )
+            const command = require(path.join(__dirname, "commands", c, f))
             client.commands.set( command.data.name, command )
         })
     })
@@ -63,6 +65,14 @@ client.on('interactionCreate', async interaction => {
 		await interaction.reply( { content: 'There was an error while executing this command!', ephemeral: true } )
 	}
 })
+
+// If the Switch button is pressed, switch to the station chosen by the user
+client.on('interactionCreate', async interaction => {
+	if (! interaction.isButton()) return;
+    if(interaction.customId.split(' - ')[0] !== 'switch') await interaction.reply( { content: 'There was an error while executing this command!', ephemeral: true } )
+    const switchStation = interaction.customId.split(' - ').pop()
+    await client.commands.get('stop').execute( client, interaction, switchStation )
+});
 
 // Start the bot
 client.login(botconfig.token)

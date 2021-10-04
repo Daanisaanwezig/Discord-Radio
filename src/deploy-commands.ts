@@ -1,6 +1,7 @@
 export {}
 
 const fs = require( 'fs' )
+const path = require( 'path' )
 const { SlashCommandBuilder } = require( '@discordjs/builders' )
 const { REST } = require( '@discordjs/rest' )
 const { Routes } = require( 'discord-api-types/v9' )
@@ -36,7 +37,7 @@ function getCommands() {
 	let promise = new Promise( ( resolve, reject ) => {
 
 		modules.forEach( (c, commandsIndex ) => {
-			fs.readdir( `./commands/${c}`, ( err, files ) => {
+			fs.readdir(path.join(__dirname, "commands", c), ( err, files ) => {
 		
 				if ( err ) console.log( err )
 		
@@ -46,7 +47,7 @@ function getCommands() {
 				}
 		
 				jsfile.forEach((f, fileIndex) => {
-					const command = require( `./commands/${c}/${f}` )
+					const command = require( path.join(__dirname, "commands", c, f) )
 					commands.push( command.data.toJSON() )
 
 

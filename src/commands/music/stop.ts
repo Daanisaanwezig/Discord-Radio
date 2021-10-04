@@ -8,11 +8,14 @@ const { join } = require( "path" )
 const { AudioPlayerStatus, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior } = require( "@discordjs/voice" )
 const { SlashCommandBuilder } = require( '@discordjs/builders' )
 
+// Import play command in case of switching stations
+const play = require( './play' )
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('stop')
 		.setDescription('Stop playing music!'),
-	async execute( client, interaction ) {
+	async execute( client, interaction, switchStation ) {
 
         const voiceChannel = interaction.member.voice
 
@@ -28,7 +31,9 @@ module.exports = {
 
             // Stop playing music
             connection.destroy()
-            await interaction.reply( 'Stopped playing music.' )
+            if(!switchStation) await interaction.reply( 'Stopped playing music.' )
+            // switch to new station
+            else await play.execute( client, interaction, switchStation ) 
         }
 	}
 }
