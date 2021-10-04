@@ -5,11 +5,11 @@ export{}
 
 // Node package imports //
 const fs = require( 'fs' )
-const path = require( "path" )
+const { join } = require( "path" )
 const { SlashCommandBuilder } = require( '@discordjs/builders' )
 
 module.exports = {
-  musicFolder: path.join(__dirname, "../../..", "music"),
+  musicFolder: join(__dirname, ".." , "..", "..", "music"),
   data: new SlashCommandBuilder()
     .setName('stations')
     .setDescription('Lists available stations to play!'),
@@ -21,7 +21,7 @@ module.exports = {
         if ( err ) console.log( err );
 
         // filter out all files from the music folder
-        stations = stations.filter(station => folderExists(`../music/${station}`));
+        stations = stations.filter(station => folderExists(join(this.musicFolder, station)));
 
         if (!stations.length) {
           return interaction.reply("No stations found... Did you create any?")

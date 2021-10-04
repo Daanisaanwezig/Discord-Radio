@@ -20,11 +20,12 @@ module.exports = {
 	async execute( client, interaction, switchStation ) {
 
         const station = interaction.options?.getString( 'station' )?.toLowerCase() || switchStation.toLowerCase()
+        const stationFolder = join(__dirname, ".." , "..", "..", "music", station);
 
-        if (! folderExists( `../music/${station}`) ) {
+        if (! folderExists(stationFolder) ) {
             return await interaction.reply( 'I could not find that radio station, are you sure it exists?' )
         }
-        fs.readdirSync( `../music/${station}`, async ( err, files ) => {
+        fs.readdirSync(stationFolder, async ( err, files ) => {
             if (! files ) {
                 return await interaction.reply( 'I could not find that radio station, are you sure it exists?' )
             }
@@ -90,13 +91,13 @@ module.exports = {
                 let trackPath = tracklist.shift()
 
                 playTrack( client, player, station, trackPath )
-    
+
                 // Idle event that fires when the bot is no longer playing a track
                 player.on( AudioPlayerStatus.Idle, async () => {
                     if ( tracklist.length == 0 ) {
                         return initPlayer()
                     }
-    
+
                     trackPath = tracklist.shift()
                     playTrack( client, player, station, trackPath )
                 })
@@ -114,11 +115,12 @@ function getTracks( station ) {
 
     // Create a promise that returns a list of all tracks in the music folder
     const promise = new Promise<String[]>((resolve, reject) => {
+        const stationFolder = join(__dirname, ".." , "..", "..", "music", station)
         // reject the promise if the station doesn't exist
-        if (!folderExists(`../music/${station}`)) reject();
+        if (!folderExists(stationFolder)) reject();
 
         let tracklist = []
-        fs.readdir( `../music/${station}`, ( err, files ) => {
+        fs.readdir(stationFolder, ( err, files ) => {
             if ( err ) console.log( err )
 
             let tracks = files.filter( f => f.split( '.' ).pop() === 'mp3' )
@@ -143,6 +145,6 @@ function playTrack( client, player, trackStation, trackPath ) {
     })
 
     // Create a new audio stream and play the track
-    const audio = createAudioResource( join( __dirname, `../../../music/${trackStation}/${trackPath}` ) )
+    const audio = createAudioResource(join( __dirname, "..", "..", "..", "music", trackStation, trackPath ))
     player.play( audio )
 }
