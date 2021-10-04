@@ -3,11 +3,11 @@
 ## Download the Latest Build
 
 1. On the [main page](https://github.com/Daanisaanwezig/Discord-Radio) of the repository, click on the **Releases** header in the right column.
-2. Open the **Assets** dropdown of the latest release, download the source code, and extract it.
+2. Open the **Assets** dropdown of the latest release, download the source code, and extract it. In the source code, the *dist* folder contains files that set up and start up the bot, while the *music* folder contains the commands for the bot.
 
 ## Install Node.js
 
-1. Download and install Node.js from [here](https://nodejs.org/en/); Discord-Radio requires version 16.9.1 or later.
+1. Download and install Node.js from [here](https://nodejs.org/en/); Discord-Radio requires version 16.6 or later.
 2. Open your command line in the folder with the source code and use the following command to install all required dependencies.
 
 ```bash
@@ -35,16 +35,16 @@ npm install
 
 ## Start Up the Bot
 
-1. Open your command line in the folder with the source code and use the following command to deploy the bot's commands.
+1. Open your command line in the **dist** folder of the source code and use the following command to deploy the bot's commands.
 
 ```bash
-node deploy-commands.ts
+node deploy-commands
 ```
 
 2. Run the following command to start up the bot.
 
 ```bash
-npm start
+node index
 ```
 
 ---
