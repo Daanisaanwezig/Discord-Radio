@@ -1,4 +1,5 @@
 import { MessageActionRow, MessageButton } from "discord.js"
+import { folderExists } from "../../util";
 
 export{}
 
@@ -20,10 +21,10 @@ module.exports = {
 
         const station = interaction.options?.getString( 'station' )?.toLowerCase() || switchStation.toLowerCase()
 
-        if (! fs.existsSync( `music/${station}`) ) {
+        if (! folderExists( `../music/${station}`) ) {
             return await interaction.reply( 'I could not find that radio station, are you sure it exists?' )
         }
-        fs.readdirSync( `music/${station}`, async ( err, files ) => {
+        fs.readdirSync( `../music/${station}`, async ( err, files ) => {
             if (! files ) {
                 return await interaction.reply( 'I could not find that radio station, are you sure it exists?' )
             }
@@ -113,8 +114,11 @@ function getTracks( station ) {
 
     // Create a promise that returns a list of all tracks in the music folder
     const promise = new Promise<String[]>((resolve, reject) => {
+        // reject the promise if the station doesn't exist
+        if (!folderExists(`../music/${station}`)) reject();
+
         let tracklist = []
-        fs.readdir( `music/${station}`, ( err, files ) => {
+        fs.readdir( `../music/${station}`, ( err, files ) => {
             if ( err ) console.log( err )
 
             let tracks = files.filter( f => f.split( '.' ).pop() === 'mp3' )
