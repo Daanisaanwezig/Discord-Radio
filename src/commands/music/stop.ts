@@ -34,6 +34,10 @@ module.exports = {
             if(!switchStation) await interaction.reply( 'Stopped playing music.' )
             // switch to new station
             else await play.execute( client, interaction, switchStation ) 
+            
+            await client.user.setActivity("no music!", {
+                type: 'LISTENING'
+            })
         }
 	}
 }
