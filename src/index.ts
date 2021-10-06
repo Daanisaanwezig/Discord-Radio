@@ -73,9 +73,13 @@ client.on('interactionCreate', async interaction => {
 // If the Switch button is pressed, switch to the station chosen by the user
 client.on('interactionCreate', async interaction => {
 	if (! interaction.isButton()) return;
-    if(interaction.customId.split(' - ')[0] !== 'switch') await interaction.reply( { content: 'There was an error while executing this command!', ephemeral: true } )
+    if( interaction.customId.split(' - ')[0] !== 'switch') await interaction.reply( { content: 'There was an error while executing this command!', ephemeral: true } )
+    
     const switchStation = interaction.customId.split(' - ').pop()
-    await client.commands.get('stop').execute( client, interaction, switchStation )
+
+    interaction.update( { content: `Now playing music from: ${switchStation}`, components: [] } )
+
+    await client.commands.get( 'stop' ).execute( client, interaction, switchStation )
 });
 
 // Start the bot
