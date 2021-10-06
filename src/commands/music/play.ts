@@ -77,7 +77,6 @@ module.exports = {
         // Start playing music and notify
         if(!switchStation)
         await interaction.reply( `Started playing music in <#${voiceChannel.channelId}>` )
-        else await interaction.reply(`Switched to ${switchStation} station`)
 
         initPlayer()
 

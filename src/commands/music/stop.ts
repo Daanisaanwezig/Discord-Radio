@@ -33,7 +33,7 @@ module.exports = {
             connection.destroy()
             if(!switchStation) await interaction.reply( 'Stopped playing music.' )
             // switch to new station
-            else await play.execute( client, interaction, switchStation ) 
+            else return await play.execute( client, interaction, switchStation ) 
             
             await client.user.setActivity("no music!", {
                 type: 'PLAYING'
