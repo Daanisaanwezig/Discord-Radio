@@ -36,7 +36,7 @@ module.exports = {
             else await play.execute( client, interaction, switchStation ) 
             
             await client.user.setActivity("no music!", {
-                type: 'LISTENING'
+                type: 'PLAYING'
             })
         }
 	}

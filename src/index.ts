@@ -24,7 +24,7 @@ client.on( 'ready', async () => {
     console.log( `[${now}] ${client.user.username} is online` )
 
     await client.user.setActivity("no music!", {
-        type: 'LISTENING'
+        type: 'PLAYING'
     })
 })
 
