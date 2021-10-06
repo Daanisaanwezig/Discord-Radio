@@ -16,7 +16,7 @@ module.exports = {
   async execute(client, interaction: CommandInteraction) {
     const name = client.user.presence?.activities[0]?.name;
 
-    if (name === undefined) {
+    if (name === undefined || name === "no music!") {
       const noCurrentSong = new MessageEmbed()
         .setTitle(`There is no song being played! 😒`)
         .setDescription("I'm not playing any song right now.")

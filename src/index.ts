@@ -22,6 +22,10 @@ client.on( 'ready', async () => {
     const now = DateTime.format( new Date(), 'YYYY/MM/DD HH:mm:ss' )
 
     console.log( `[${now}] ${client.user.username} is online` )
+
+    await client.user.setActivity("no music!", {
+        type: 'PLAYING'
+    })
 })
 
 
