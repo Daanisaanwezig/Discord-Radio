@@ -1,5 +1,5 @@
 import { MessageActionRow, MessageButton } from "discord.js"
-import { folderExists } from "../../util";
+import { stationExists } from "../../util";
 
 export{}
 
@@ -22,7 +22,7 @@ module.exports = {
         const station = interaction.options?.getString( 'station' )?.toLowerCase() || switchStation.toLowerCase()
         const stationFolder = join(__dirname, ".." , "..", "..", "music", station);
 
-        if (! folderExists(stationFolder) ) {
+        if (! stationExists(stationFolder) ) {
             return await interaction.reply( 'I could not find that radio station, are you sure it exists?' )
         }
         fs.readdirSync(stationFolder, async ( err, files ) => {
@@ -116,7 +116,7 @@ function getTracks( station ) {
     const promise = new Promise<String[]>((resolve, reject) => {
         const stationFolder = join(__dirname, ".." , "..", "..", "music", station)
         // reject the promise if the station doesn't exist
-        if (!folderExists(stationFolder)) reject();
+        if (!stationExists(stationFolder)) reject();
 
         let tracklist = []
         fs.readdir(stationFolder, ( err, files ) => {
