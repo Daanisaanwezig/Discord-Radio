@@ -1,42 +1,42 @@
-import {CommandInteraction, MessageEmbed} from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import { folderExists, stationExists } from "../../util";
 
-export{}
+export { }
 
 // Node package imports //
-const fs = require( 'fs' )
-const { join } = require( "path" )
-const { SlashCommandBuilder } = require( '@discordjs/builders' )
+const fs = require('fs')
+const { join } = require("path")
+const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
-  musicFolder: join(__dirname, ".." , "..", "..", "music"),
+  musicFolder: join(__dirname, "..", "..", "..", "music"),
   data: new SlashCommandBuilder()
     .setName('stations')
     .setDescription('Lists available stations to play!'),
-  async execute( client, interaction: CommandInteraction) {
-    if (! folderExists(this.musicFolder)) {
-      return await interaction.reply( "I couldn't find the music folder, are you sure it exists?" )
+  async execute(client, interaction: CommandInteraction) {
+    if (!folderExists(this.musicFolder)) {
+      return await interaction.reply("I couldn't find the music folder, are you sure it exists?")
     }
-    fs.readdir(this.musicFolder, ( err, stations ) => {
-        if ( err ) console.log( err );
+    fs.readdir(this.musicFolder, (err, stations) => {
+      if (err) console.log(err);
 
-        // filter out all files and invalid folders from the music folder
-        stations = stations.filter(station => stationExists(join(this.musicFolder, station)));
+      // filter out all files and invalid folders from the music folder
+      stations = stations.filter(station => stationExists(join(this.musicFolder, station)));
 
-        if (!stations.length) {
-          return interaction.reply("No stations found... Did you create any?")
-        }
+      if (!stations.length) {
+        return interaction.reply("No stations found... Did you create any?")
+      }
 
-        const stationsStr = stations.map((station) => {
-          return `- ${this.capitalize(station)}`
-        }).join("\n")
+      const stationsStr = stations.map((station) => {
+        return `- ${this.capitalize(station)}`
+      }).join("\n")
 
-        const stationsEmbed = new MessageEmbed()
-          .setTitle("Available stations:")
-          .setDescription(stationsStr)
-          .setFooter("Play one of these using /play");
+      const stationsEmbed = new MessageEmbed()
+        .setTitle("Available stations:")
+        .setDescription(stationsStr)
+        .setFooter("Play one of these using /play");
 
-        interaction.reply({embeds: [stationsEmbed]})
+      interaction.reply({ embeds: [stationsEmbed] })
     });
   },
 
