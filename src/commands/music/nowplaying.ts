@@ -1,6 +1,6 @@
 import { CommandInteraction, MessageEmbed } from "discord.js";
 
-export {};
+export { };
 
 // Node package imports //
 const fs = require("fs");
@@ -23,11 +23,11 @@ module.exports = {
         .setFooter("Play one of these using /play");
       return await interaction.reply({ embeds: [noCurrentSong] })
     }
-      const currentSongEmbed = new MessageEmbed()
-        .setTitle(`Current Song: ${name}`)
-        .setDescription(name)
-        .setFooter("Stop the song by typing /stop");
+    const currentSongEmbed = new MessageEmbed()
+      .setTitle(`Current Song: ${name}`)
+      .setDescription(name)
+      .setFooter("Stop the song by typing /stop");
 
-      return await interaction.reply({ embeds: [currentSongEmbed] });
+    return await interaction.reply({ embeds: [currentSongEmbed] });
   },
 };

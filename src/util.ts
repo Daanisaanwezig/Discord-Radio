@@ -6,5 +6,5 @@ import fs from "fs";
  * @returns a boolean indicating if the path exists and refers to a folder
  */
 export function folderExists(path: string): boolean {
-    return fs.existsSync(path) && fs.lstatSync(path).isDirectory();
+  return fs.existsSync(path) && fs.lstatSync(path).isDirectory();
 }
