@@ -1,5 +1,5 @@
-import { CommandInteraction, MessageActionRow, MessageButton } from "discord.js"
-import { folderExists } from "../../util";
+import { MessageActionRow, MessageButton } from "discord.js"
+import { stationExists } from "../../util";
 
 export { }
 
@@ -10,26 +10,26 @@ const { AudioPlayerStatus, createAudioPlayer, createAudioResource, joinVoiceChan
 const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('play')
-    .setDescription('Start playing music!')
-    .addStringOption(option => option
-      .setName('station')
-      .setDescription('Choose the radio station')
-      .setRequired(true)),
-  async execute(client, interaction, switchStation) {
+	data: new SlashCommandBuilder()
+		.setName('play')
+		.setDescription('Start playing music!')
+        .addStringOption( option => option
+            .setName( 'station' )
+            .setDescription( 'Choose the radio station' )
+            .setRequired( true )),
+	async execute( client, interaction, switchStation ) {
 
-    const station = interaction.options?.getString('station')?.toLowerCase() || switchStation.toLowerCase()
-    const stationFolder = join(__dirname, "..", "..", "..", "music", station);
+        const station = interaction.options?.getString( 'station' )?.toLowerCase() || switchStation.toLowerCase()
+        const stationFolder = join(__dirname, ".." , "..", "..", "music", station);
 
-    if (!folderExists(stationFolder)) {
-      return await interaction.reply('I could not find that radio station, are you sure it exists?')
-    }
-    fs.readdirSync(stationFolder, async (err, files) => {
-      if (!files) {
-        return await interaction.reply('I could not find that radio station, are you sure it exists?')
-      }
-    })
+        if (! stationExists(stationFolder) ) {
+            return await interaction.reply( 'I could not find that radio station, are you sure it exists?' )
+        }
+        fs.readdirSync(stationFolder, async ( err, files ) => {
+            if (! files ) {
+                return await interaction.reply( 'I could not find that radio station, are you sure it exists?' )
+            }
+        })
 
 
     const voiceChannel = interaction.member.voice
@@ -116,20 +116,33 @@ function getTracks(station) {
   const promise = new Promise<String[]>((resolve, reject) => {
     const stationFolder = join(__dirname, "..", "..", "..", "music", station)
     // reject the promise if the station doesn't exist
-    if (!folderExists(stationFolder)) reject();
+    if (!stationExists(stationFolder)) reject();
 
     let tracklist = []
     fs.readdir(stationFolder, (err, files) => {
       if (err) console.log(err)
 
-      let tracks = files.filter(f => f.split('.').pop() === 'mp3')
-      tracks.forEach(track => {
-        tracklist.push(track)
-        if (track == tracks[tracks.length - 1]) {
-          // Resolve the promise with a shuffled list of tracks
-          resolve(tracklist.sort(() => (Math.random() > .5) ? 1 : -1))
-        }
-      })
+function getTracks( station ) {
+
+    // Create a promise that returns a list of all tracks in the music folder
+    const promise = new Promise<String[]>((resolve, reject) => {
+        const stationFolder = join(__dirname, ".." , "..", "..", "music", station)
+        // reject the promise if the station doesn't exist
+        if (!stationExists(stationFolder)) reject();
+
+        let tracklist = []
+        fs.readdir(stationFolder, ( err, files ) => {
+            if ( err ) console.log( err )
+
+            let tracks = files.filter( f => f.split( '.' ).pop() === 'mp3' )
+            tracks.forEach( track => {
+                tracklist.push( track )
+                if ( track == tracks[ tracks.length - 1 ] ) {
+                    // Resolve the promise with a shuffled list of tracks
+                    resolve( tracklist.sort( () => ( Math.random() > .5 ) ? 1 : -1 ) )
+                }
+            })
+        })
     })
   })
 
