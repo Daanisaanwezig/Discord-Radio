@@ -11,7 +11,7 @@ const STATION_NAME_MAX_LENGTH = 50;
  * @returns a boolean indicating if the path exists and refers to a folder
  */
 export function folderExists(path: string): boolean {
-    return fs.existsSync(path) && fs.lstatSync(path).isDirectory();
+  return fs.existsSync(path) && fs.lstatSync(path).isDirectory();
 }
 
 /**
@@ -20,5 +20,5 @@ export function folderExists(path: string): boolean {
  * @returns a boolean indicating if the station folder is valid
  */
 export function stationExists(stationFolder: string): boolean {
-    return folderExists(stationFolder) && basename(stationFolder).length <= STATION_NAME_MAX_LENGTH;
+  return folderExists(stationFolder) && basename(stationFolder).length <= STATION_NAME_MAX_LENGTH;
 }

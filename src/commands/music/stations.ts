@@ -1,4 +1,4 @@
-import {CommandInteraction, MessageEmbed} from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import { folderExists, stationExists } from "../../util";
 
 export { }
@@ -20,8 +20,8 @@ module.exports = {
     fs.readdir(this.musicFolder, (err, stations) => {
       if (err) console.log(err);
 
-        // filter out all files and invalid folders from the music folder
-        stations = stations.filter(station => stationExists(join(this.musicFolder, station)));
+      // filter out all files and invalid folders from the music folder
+      stations = stations.filter(station => stationExists(join(this.musicFolder, station)));
 
       if (!stations.length) {
         return interaction.reply("No stations found... Did you create any?")
