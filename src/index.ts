@@ -5,6 +5,7 @@ import path from 'path'
 import fs from 'fs'
 import DateTime from 'date-and-time'
 import { getVoiceConnection } from '@discordjs/voice'
+import { StationsInteractions } from './commands/music/stations'
 
 
 // Data files //
@@ -74,27 +75,32 @@ client.on('interactionCreate', async interaction => {
   }
 })
 
-// If the Switch button is pressed, switch to the station chosen by the user
 client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
-  if (interaction.customId.split(' - ')[0] !== 'switch') await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true })
+  let cmd = interaction.customId.split(" - ")[0];
 
-  const [, switchStation, userID] = interaction.customId.split(' - ');
-  const member = await interaction.guild.members.fetch(interaction.user.id)
-  if (userID !== interaction.user.id) return await interaction.reply({ content: 'This button is only usable by the user that executed the command.', ephemeral: true })
+  if (cmd === "switch") {
+    // If the Switch button (/play command) is pressed, switch to the station chosen by the user
+    const [, switchStation, userID] = interaction.customId.split(' - ');
+    const member = await interaction.guild.members.fetch(interaction.user.id)
+    if (userID !== interaction.user.id) return await interaction.reply({ content: 'This button is only usable by the user that executed the command.', ephemeral: true })
 
-  if (member.voice && member.voice.channel) {
-    const connection = getVoiceConnection(member.voice.channel.guild.id)
-    if (connection) {
+    if (member.voice && member.voice.channel) {
+      const connection = getVoiceConnection(member.voice.channel.guild.id)
+      if (connection) {
 
-      interaction.update({ content: `Now playing music from: ${switchStation}`, components: [] })
+        interaction.update({ content: `Now playing music from: ${switchStation}`, components: [] })
 
-      await client.commands.get('stop').execute(client, interaction, switchStation)
+        await client.commands.get('stop').execute(client, interaction, switchStation)
+      } else {
+        await interaction.reply({ content: 'I\'m not playing music so I can\'t switch to another station!', ephemeral: true })
+      }
     } else {
-      await interaction.reply({ content: 'I\'m not playing music so I can\'t switch to another station!', ephemeral: true })
+      await interaction.reply({ content: 'You need to be in a voice channel to use this button!', ephemeral: true })
     }
-  } else {
-    await interaction.reply({ content: 'You need to be in a voice channel to use this button!', ephemeral: true })
+  } else if (cmd === "stationsList") {
+    // If the Next button (/stations command) is pressed, show the next stations
+    await client.commands.get("stations").execute(client, interaction, interaction.customId.split(" - ")[1]);
   }
 });
 
